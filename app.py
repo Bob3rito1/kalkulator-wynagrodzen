@@ -19,4 +19,5 @@ def calculate():
     return jsonify({'netSalary': net_salary})
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=10000)
+    # NIE używaj app.run() na Render! Gunicorn zrobi to za Ciebie
+    pass
