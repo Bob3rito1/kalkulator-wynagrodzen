@@ -3,17 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator Wynagrodzeń</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Kalkulator Wynagrodzenia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <h2>💰 Kalkulator Wynagrodzeń</h2>
-        <p>Podaj kwotę brutto, a my obliczymy wynagrodzenie netto.</p>
-        <input type="number" id="grossSalary" placeholder="Wpisz pensję brutto">
-        <button onclick="calculateNetSalary()">Oblicz</button>
-        <p id="result"></p>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
+    <div class="bg-white shadow-lg rounded-2xl p-8 max-w-md w-full text-center">
+        <img src="logo.png" alt="Logo" class="mx-auto mb-4 w-20 h-20">
+        <h1 class="text-2xl font-bold text-gray-700 mb-4">Kalkulator Wynagrodzenia</h1>
+        <input type="number" id="grossSalary" placeholder="Podaj wynagrodzenie brutto" 
+            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <button onclick="calculateNetSalary()" 
+            class="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 w-full">
+            Oblicz
+        </button>
+        <p id="result" class="mt-4 text-lg font-semibold text-gray-700"></p>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        async function calculateNetSalary() {
+            let grossSalary = document.getElementById("grossSalary").value;
+            
+            let response = await fetch("https://kalkulator-backend.onrender.com/calculate", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ salary: grossSalary })
+            });
+
+            let data = await response.json();
+            document.getElementById("result").innerText = "Wynagrodzenie netto: " + data.netSalary + " zł";
+        }
+    </script>
 </body>
 </html>
