@@ -1,16 +1,33 @@
-async function calculateAdvancedNetSalary() {
-  let grossSalary = parseFloat(document.getElementById("grossSalary").value) || 0;
-  let extraDeductions = parseFloat(document.getElementById("extraDeductions").value) || 0;
-  let bonus = parseFloat(document.getElementById("bonus").value) || 0;
+async function calculateNetSalary() {
+  let grossSalary = document.getElementById("grossSalary").value;
+  let contractType = document.getElementById("contractType").value;
+  let currency = document.getElementById("currency").value;
 
-  let finalSalary = grossSalary + bonus - extraDeductions;
+  if (!grossSalary) {
+      alert("Podaj kwotę brutto!");
+      return;
+  }
 
   let response = await fetch("https://kalkulator-backend.onrender.com/calculate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ salary: finalSalary })
+      body: JSON.stringify({ salary: grossSalary, contractType: contractType, currency: currency })
   });
 
   let data = await response.json();
-  document.getElementById("advancedResult").innerText = "Zaawansowane wynagrodzenie netto: " + data.netSalary + " zł";
+  let resultText = `Wynagrodzenie netto: ${data.netSalary} ${currency}`;
+  
+  document.getElementById("result").innerText = resultText;
+
+  // Dodaj wynik do historii
+  let historyList = document.getElementById("historyList");
+  let listItem = document.createElement("li");
+  listItem.textContent = resultText;
+  historyList.appendChild(listItem);
+}
+
+// Funkcja czyszczenia historii
+function clearHistory() {
+  document.getElementById("historyList").innerHTML = "";
+  document.getElementById("result").innerText = "";
 }
